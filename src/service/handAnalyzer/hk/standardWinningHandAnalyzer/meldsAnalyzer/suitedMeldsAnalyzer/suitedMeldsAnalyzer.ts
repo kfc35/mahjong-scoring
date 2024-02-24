@@ -8,12 +8,15 @@ import Chow from "model/meld/chow";
 import Pong from "model/meld/pong";
 import Kong from "model/meld/kong";
 import { meldPairLength, meldPongLength, meldKongLength } from "model/meld/meldConstants";
+import { cartesianProduct } from "common/meldUtils";
 import { TileGroup } from "model/tile/tileGroup";
 import { SuitedTileValue, getNextSuitedTileValue } from "model/tile/tileValue";
 import SuitedTileValueQuantityMemo from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedTileValueQuantityMemo";
 import SuitedTile from "model/tile/group/suitedTile";
 
 export const analyzeForSuitedMelds : MeldsAnalyzer = (hand: Hand) => {
+    // knitted straights are not supported in hk hands
+
     const bambooMelds = getSuitedMelds(hand, TileGroup.BAMBOO);
     const characterMelds = getSuitedMelds(hand, TileGroup.CHARACTER);
     const circleMelds = getSuitedMelds(hand, TileGroup.CIRCLE);
@@ -26,6 +29,7 @@ function getSuitedMelds(hand: Hand, tileGroup: SuitedTileGroup) : Meld[][] {
     return getMeldsFromStartingSTV(tileGroup, SuitedTileValue.ONE, memo);
 }
 
+// Returns a list of possible meld combinations (hence Meld[][])
 function getMeldsFromStartingSTV(tileGroup: SuitedTileGroup, startingSTV: SuitedTileValue | undefined, quantityMemo: SuitedTileValueQuantityMemo) : Meld[][] {
     if (startingSTV === undefined) {
         return []; // finished processing for this tileGroup
@@ -39,7 +43,7 @@ function getMeldsFromStartingSTV(tileGroup: SuitedTileGroup, startingSTV: Suited
             const chowCreator = chowsCreator(1);
             return createMeldsAndGetSubsequentMelds(tileGroup, startingSTV, quantityMemo, chowCreator);
         }
-        return []; // one lone tile that cannot be used in a meld, so short circuit out for filtering out.
+        return []; // one lone tile that cannot be used in a meld, so short circuit out. It'll be filtered elsewhere.
     }
     if (quantity === 2) {
         // can be a pair
@@ -110,7 +114,15 @@ function getMeldsFromStartingSTV(tileGroup: SuitedTileGroup, startingSTV: Suited
         // cannot be two pairs -- checking for 7 pairs is a separate analyzer
         return melds;
     }
-    return []; // invalid quantity, short circuit out.
+    throw new Error(`Hand is malformed. Found quantity not between 0 and 4 for ${tileGroup} ${startingSTV}: ${quantity}`);
+}
+
+function createMeldsAndGetSubsequentMelds(suitedTileGroup: SuitedTileGroup, suitedTileValue : SuitedTileValue, quantityMemo: SuitedTileValueQuantityMemo, meldsCreator: SuitedMeldsCreator) : Meld[][] {
+    // the memo is copied in case the parent memo is re-used to process different meld possibilities
+    const copiedMemo = new SuitedTileValueQuantityMemo(quantityMemo);
+    const currentSTVMelds = meldsCreator(suitedTileGroup, suitedTileValue, copiedMemo);
+    const subsequentMelds = getMeldsFromStartingSTV(suitedTileGroup, getNextSuitedTileValue(suitedTileValue), copiedMemo);
+    return cartesianProduct([currentSTVMelds], subsequentMelds);
 }
 
 type SuitedMeldCreator = (suitedTileGroup: SuitedTileGroup, suitedTileValue : SuitedTileValue, quantityMemo: SuitedTileValueQuantityMemo) => Meld
@@ -145,7 +157,7 @@ function chowsCreator(numChows : number): SuitedMeldsCreator {
         const [[stv1, ],[stv2, ], [stv3, ]] = quantityMemo.decreaseQuantityForChow(suitedTileValue, numChows);
         const tiles : [SuitedTile, SuitedTile, SuitedTile] = [constructSuitedTile(suitedTileGroup, stv1),constructSuitedTile(suitedTileGroup, stv2), constructSuitedTile(suitedTileGroup, stv3)];
         const chows = [];
-        for (let i = 1; i <= (numChows); i++) {
+        for (let i = 1; i <= numChows; i++) {
             chows.push(new Chow(tiles));
         }
         return chows;
@@ -174,33 +186,6 @@ function concatMeldsCreators(suitedMeldsCreators: SuitedMeldsCreator[]) : Suited
     }
 }
 
-function createMeldsAndGetSubsequentMelds(suitedTileGroup: SuitedTileGroup, suitedTileValue : SuitedTileValue, quantityMemo: SuitedTileValueQuantityMemo, meldsCreator: SuitedMeldsCreator) : Meld[][] {
-    // the memo is copied in case the parent memo is re-used to process different meld possibilities
-    const copiedMemo = new SuitedTileValueQuantityMemo(quantityMemo);
-    const currentSTVMelds = meldsCreator(suitedTileGroup, suitedTileValue, copiedMemo);
-    const nextMelds = getMeldsFromStartingSTV(suitedTileGroup, getNextSuitedTileValue(suitedTileValue), copiedMemo);
-    if (nextMelds.length === 0) {
-        return [currentSTVMelds];
-    }
-    return nextMelds.map(melds => [...currentSTVMelds, ...melds]);
-}
-
 function combineSuitedMelds(bambooMelds: Meld[][], characterMelds: Meld[][], circleMelds: Meld[][]) : Meld[][] {
     return cartesianProduct(cartesianProduct(bambooMelds, characterMelds), circleMelds);
-}
-
-function cartesianProduct(meldsOne: Meld[][], meldsTwo: Meld[][]) : Meld[][] {
-    if (meldsOne.length === 0) {
-        return meldsTwo; // might also have length = 0, that is fine.
-    }
-    if (meldsTwo.length === 0) {
-        return meldsOne;
-    }
-    const product : Meld[][] = [];
-    for (const meldOne of meldsOne) {
-        for (const meldTwo of meldsTwo) {
-            product.push([...meldOne, ...meldTwo]);
-        }
-    }
-    return product;
 }

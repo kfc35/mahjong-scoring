@@ -1,32 +1,34 @@
 import { HandAnalyzer } from "service/handAnalyzer/hk/handAnalyzer";
 import { Hand } from "model/hand/hk/hand"
 import { StandardWinningHand } from "model/hand/hk/standardWinningHand"
-import Meld from "model/meld/meld";
 import { analyzeForHonorMelds } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/honorMeldsAnalyzer/honorMeldsAnalyzer";
-import { analyzeForSuitedMelds } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedMeldsAnalyzer";}
+import { analyzeForSuitedMelds } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedMeldsAnalyzer";
+import { cartesianProduct, meldsHasOnePair, meldsNumKongs, meldsNumTiles, meldsAreSubset, toTiles } from "common/meldUtils";
+import { TileToQuantityMap } from "model/hand/hk/tileQuantityMap";
+import { handMinLength } from "model/hand/hk/handConstants";
 
 export const analyzeForFourNonPairMeldsAndOnePair : HandAnalyzer<StandardWinningHand> = (hand: Hand) => {
     // all other standard winning hands (4 non-pair melds and 1 pair meld).
     // Overall, navigate greedily, filter bad combos at the end.
-    const possibleMeldCombinations: Meld[][] = [];
+    
     const honorMelds = analyzeForHonorMelds(hand);
-
-    // for knitted straights, this algo will need to be changed
-    // TODO suited tile melds
     const suitedMelds = analyzeForSuitedMelds(hand);
-
-    if (suitedMelds.length > 0 && honorMelds.length > 0) {
-        possibleMeldCombinations.push(...honorMelds);
-        //TODO fix to cartesian product
-        possibleMeldCombinations
-            .forEach(possibleMeldCombo => possibleMeldCombo.push(...suitedMelds));
-    } else if (honorMelds.length > 0) { // the honor melds themselves may be the only winning hand.
-        possibleMeldCombinations.push(...honorMelds);
-    } else {
-        possibleMeldCombinations.push(...suitedMelds);
-    }
+    const numKongs = hand.getTotalQuantity() - handMinLength;
+    const possibleMeldCombinations = cartesianProduct(honorMelds, suitedMelds);
     
     return possibleMeldCombinations
-    //.filter(melds => ) melds must have 1 pair, must have numKongs, must be length 5, tile sum must equal hand length, must contain pre-specified melds
+    // one pair and four non pairs, with the correct number of kongs.
+    .filter(melds => meldsHasOnePair(melds))
+    .filter(melds => melds.length === 5)
+    .filter(melds => meldsNumKongs(melds) === numKongs)
+    // all tiles in the hand should be represented within the melds
+    .filter(melds => meldsNumTiles(melds) === hand.getTotalQuantity())
+    .filter(melds => {
+        const meldTiles = toTiles(melds);
+        const meldTileQuantityMap = new TileToQuantityMap(meldTiles);
+        return meldTiles.every(tile => meldTileQuantityMap.getQuantity(tile) === hand.getQuantity(tile))
+    })
+    // if the hand has prespecified melds, they must be present in the possible meld combo.
+    .filter(melds => meldsAreSubset(melds, hand.preSpecifiedMelds))
     .map(melds => new StandardWinningHand(melds,hand.flowerTiles))
 }
