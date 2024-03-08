@@ -1,18 +1,18 @@
 import { HandAnalyzer } from "service/handAnalyzer/hk/handAnalyzer";
 import { Hand } from "model/hand/hk/hand"
 import { StandardWinningHand } from "model/hand/hk/standardWinningHand"
-import { analyzeForHonorMelds } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/honorMeldsAnalyzer/honorMeldsAnalyzer";
-import { analyzeForSuitedMelds } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedMeldsAnalyzer";
+import { analyzeForHonorMelds } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/honorMeldsAnalyzer/honorMeldsAnalyzer";
+import { analyzeForNonKnittedSuitedMelds } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/nonKnittedSuitedMeldsAnalyzer";
 import { cartesianProduct, meldsHasOnePair, meldsNumKongs, meldsNumTiles, meldsAreSubset, toTiles } from "common/meldUtils";
 import { TileToQuantityMap } from "model/hand/hk/tileQuantityMap";
 import { handMinLength } from "model/hand/hk/handConstants";
 
-export const analyzeForFourNonPairMeldsAndOnePair : HandAnalyzer<StandardWinningHand> = (hand: Hand) => {
+export const analyzeForFiveMeldsNoKnitted : HandAnalyzer<StandardWinningHand> = (hand: Hand) => {
     // all other standard winning hands (4 non-pair melds and 1 pair meld).
     // Overall, navigate greedily, filter bad combos at the end.
     
     const honorMelds = analyzeForHonorMelds(hand);
-    const suitedMelds = analyzeForSuitedMelds(hand);
+    const suitedMelds = analyzeForNonKnittedSuitedMelds(hand);
     const numKongs = hand.getTotalQuantity() - handMinLength;
     const possibleMeldCombinations = cartesianProduct(honorMelds, suitedMelds);
     

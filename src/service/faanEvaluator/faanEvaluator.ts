@@ -1,38 +1,4 @@
-import { Hand } from "../../model/hand/hk/hand.js";
+import { WinningHand } from "model/hand/hk/winningHand.js";
+import { FaanResult } from "service/faanEvaluator/faanResult";
 
-export interface FaanEvaluator {
-    getFaan(): number;
-    isBaseFaan(): boolean;
-    evaluate(hand: Hand) : FaanResult;
-}
-
-export class FaanResult {
-    private awardFaan: boolean;
-    private faan: number;
-    private baseFaan: boolean;
-    // TODO need to redesign this to not be circular...
-    private overrideEvaluators: Set<FaanEvaluator>;
-
-    constructor(awardFaan: boolean, faan: number, baseFaan: boolean, overrideEvaluators?: Set<FaanEvaluator>) {
-        this.awardFaan = awardFaan;
-        this.faan = faan;
-        this.baseFaan = baseFaan;
-        this.overrideEvaluators = (overrideEvaluators ? overrideEvaluators : new Set<FaanEvaluator>());
-    }
-
-    shouldAwardFaan(): boolean {
-        return this.awardFaan;
-    }
-
-    getFaan(): number {
-        return this.faan;
-    }
-
-    isBaseFaan(): boolean {
-        return this.baseFaan;
-    }
-
-    getOverrideEvaluators(): Set<FaanEvaluator> {
-        return this.overrideEvaluators;
-    }
-}
+export type faanEvaluator = (winningHand : WinningHand) => FaanResult;

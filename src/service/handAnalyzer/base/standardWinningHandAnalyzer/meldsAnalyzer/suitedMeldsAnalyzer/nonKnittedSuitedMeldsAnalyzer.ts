@@ -1,4 +1,4 @@
-import { MeldsAnalyzer } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/meldsAnalyzer"
+import { MeldsAnalyzer } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/meldsAnalyzer"
 import { Hand } from "model/hand/hk/hand"
 import { type SuitedTileGroup } from "model/tile/group/suitedTile";
 import { constructSuitedTile } from "model/tile/group/suitedTileConstructor";
@@ -11,12 +11,10 @@ import { meldPairLength, meldPongLength, meldKongLength } from "model/meld/meldC
 import { cartesianProduct } from "common/meldUtils";
 import { TileGroup } from "model/tile/tileGroup";
 import { SuitedTileValue, getNextSuitedTileValue } from "model/tile/tileValue";
-import SuitedTileValueQuantityMemo from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedTileValueQuantityMemo";
+import SuitedTileValueQuantityMemo from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/suitedTileValueQuantityMemo";
 import SuitedTile from "model/tile/group/suitedTile";
 
-export const analyzeForSuitedMelds : MeldsAnalyzer = (hand: Hand) => {
-    // knitted straights are not supported in hk hands
-
+export const analyzeForNonKnittedSuitedMelds : MeldsAnalyzer = (hand: Hand) => {
     const bambooMelds = getSuitedMelds(hand, TileGroup.BAMBOO);
     const characterMelds = getSuitedMelds(hand, TileGroup.CHARACTER);
     const circleMelds = getSuitedMelds(hand, TileGroup.CIRCLE);

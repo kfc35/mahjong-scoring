@@ -1,21 +1,16 @@
 export enum WinCondition {
-    CHICKEN = 'CHICKEN',
-    MIXED_ORPHANS = 'MIXED_ORPHANS',
-    COMMON = 'COMMON', // All Chows
-    ALL_IN_TRIPLETS = 'ALL_IN_TRIPLETS',
-    SEVEN_PAIRS = 'SEVEN_PAIRS',
-    MIXED_ONE_SUIT = 'MIXED_ONE_SUIT',
-    ALL_ONE_SUIT = 'ALL_ONE_SUIT',
-    ALL_HONORS = 'ALL_HONORS', // ALL_IN_TRIPLETS not awarded
-    SMALL_DRAGONS = 'SMALL_DRAGONS',
-    GREAT_DRAGONS = 'GREAT_DRAGONS',
-    SMALL_WINDS = 'SMALL_WINDS',
-    GREAT_WINDS = 'GREAT_WINDS',
-    THIRTEEN_ORPHANS = 'THIRTEEN_ORPHANS', //special win condition.
-    ALL_KONGS = 'ALL_KONGS',
-    SELF_TRIPLETS = 'SELF_TRIPLETS', // four concealed pongs/kongs, not even the last one.
-    // can win from self-pick but no bonus for winning from wall
-    ORPHANS = 'ORPHANS', // ALL_IN_TRIPLETS not counted.
-    NINE_GATES = 'NINE_GATES', // must win totally concealed, can only eat when waiting.    
+    SELF_DRAW = 'SELF_DRAW', // last winning tile is NOT a discard
+    WIN_FROM_WALL = 'WIN_FROM_WALL', // AKA Concealed Hand - hand completely concealed, winning tile can be from discard or from wall
+    ROBBING_KONG = 'ROBBING_KONG',  // a special type of discard win - eating someones discard that would have been someone else's kong
+    WIN_BY_LAST_TILE = 'WIN_BY_LAST_TILE', // win by last tile on wall
+    WIN_BY_LAST_DISCARD = 'WIN_BY_LAST_DISCARD', // win by last discard of game
+    WIN_BY_KONG = 'WIN_BY_KONG', // win via replacement tile from kong
+    WIN_BY_FLOWER = 'WIN_BY_FLOWER', // win via replacement tile from flower
+    WIN_BY_DOUBLE_KONG = 'WIN_BY_DOUBLE_KONG', // win via replacement tile of replacement tile
+    WIN_BY_DOUBLE_FLOWER = 'WIN_BY_DOUBLE_FLOWER', // win via replacement tile after drawing two flowers in a row
+    WIN_WITH_INITIAL_HAND = 'WIN_WITH_INITIAL_HAND' // can be HEAVENLY_HAND or EARTHLY_HAND depending on the RoundContext.
 }
-// TODO TestHandForWindCondition
+
+export function winConditionsAreWellFormed(winConditions : WinCondition[]) {
+    return true;
+}

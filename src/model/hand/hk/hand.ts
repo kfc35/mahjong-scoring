@@ -3,7 +3,7 @@ import { Tile } from "model/tile/tile";
 import { type HongKongTile } from "model/tile/hk/hongKongTile";
 import { type FlowerTile, isFlowerTile } from "model/tile/group/flowerTile";
 import { type SuitedOrHonorTile, isSuitedOrHonorTile } from "model/tile/group/suitedOrHonorTile";
-import { WinningHand } from "model/hand/hk/winningHand";
+import WinCondition
 import { TileToQuantityMap } from "model/hand/hk/tileQuantityMap";
 import { handMinLength, handMaxLength, handMaxNumUniqueFlowers } from "model/hand/hk/handConstants";
 import { maxQuantityPerNonFlowerTile } from "common/deck";
@@ -22,10 +22,11 @@ export class Hand {
        e.g. if preSpeciedMelds has a concealed pong, every winning hand must have that concealed pong. 
        Ideally, the tiles in the meld are also duplicated in _tileToQuantity */ 
     private _preSpecifiedMelds: Meld[];
-    private _winningHands: WinningHand[];
     private _flowerTiles: FlowerTile[];
+    private _winningTile: Tile;
+    // TODO win conditions have to be fed in.
 
-    constructor(tiles: HongKongTile[], preSpecifiedMelds?: Meld[]) {
+    constructor(tiles: HongKongTile[], winConditions: WinCondition[], preSpecifiedMelds?: Meld[]) {
         assertTilesNotNullAndCorrectLength(tiles, handMinLength, handMaxLength);
         assertTilesHongKongTile(tiles)
 
@@ -73,7 +74,7 @@ export class Hand {
 
         this._preSpecifiedMelds = preSpecifiedMelds ?? [];
         this._tileToQuantity = tileToQuantity;
-        this._winningHands = [];
+        this._winningTile = tiles[tiles.length-1];
     }
 
     get tileToQuantity() {
@@ -108,24 +109,11 @@ export class Hand {
         return this._tileToQuantity.getQuantityToTileMap(includeFlowerTiles);
     }
 
-    get winningHands() {
-        return this._winningHands;
-    }
-
     get flowerTiles() {
         return this._flowerTiles;
     }
 
     get preSpecifiedMelds() {
         return this._preSpecifiedMelds;
-    }
-
-    // returning "this" allows for chaining multiple analyzers.
-    analyzeHandForWinCondition(analyzer: (hand: Hand) => WinningHand | undefined) : this {
-        const winningHand = analyzer(this);
-        if (winningHand) {
-            this._winningHands.push(winningHand);
-        }
-        return this;
     }
 }

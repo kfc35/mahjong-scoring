@@ -1,4 +1,4 @@
-import { MeldsAnalyzer } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/meldsAnalyzer/meldsAnalyzer";
+import { MeldsAnalyzer } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/meldsAnalyzer";
 import { Hand } from "model/hand/hk/hand";
 import { type HonorTileGroup, HonorTileValue } from "model/tile/group/honorTile";
 import { TileGroup } from "model/tile/tileGroup";

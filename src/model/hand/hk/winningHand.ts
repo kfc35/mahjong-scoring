@@ -7,4 +7,5 @@ export interface WinningHand {
     //get winConditions() : WinCondition[];
     get flowerTiles() : FlowerTile[];
     getContents() : SuitedOrHonorTile[] | Meld[];
+    // TODO something about how the last tile was won, or win conditions
 }
