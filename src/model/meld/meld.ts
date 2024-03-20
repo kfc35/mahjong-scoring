@@ -6,6 +6,7 @@ export default abstract class Meld {
     protected _tiles: SuitedOrHonorTile[];
     protected _type: MeldType;
     /* _exposed = true if a discard was used to complete it during regular play.
+      _exposed = false if the meld was completed without the need of a discard.
       If the last tile that completes your hand AND this meld is from a discard, 
       _exposed is set to true. */
     protected _exposed: boolean;
@@ -31,6 +32,7 @@ export default abstract class Meld {
         return this._exposed;
     }
 
+    // ignoreExposed default is true
     equals(meld: Meld | undefined, ignoreExposed? : boolean): boolean {
         if (!meld) {
             return false;

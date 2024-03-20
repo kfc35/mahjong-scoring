@@ -64,14 +64,14 @@ export class TileToQuantityMap {
 
     getQuantityPerUniqueTile(includeFlowerTiles?: boolean): number[] {
         return [...this._tileToQuantityMap.entries()]
-            .filter(([tileGroup,]) => (includeFlowerTiles ? true : !flowerTileGroups.has(tileGroup)))
+            .filter(([tileGroup,]) => ((includeFlowerTiles ?? false) ? true : !flowerTileGroups.has(tileGroup)))
             .map(([, map]) => [...map.values()]) // number[][]
             .reduce<number[]>((accum, numberArray) => accum.concat(numberArray), []);
     }
 
     getTotalQuantity(includeFlowerTiles?: boolean) : number {
         return [...this._tileToQuantityMap.entries()]
-        .filter(([tileGroup,]) => (includeFlowerTiles ? true : !flowerTileGroups.has(tileGroup)))
+        .filter(([tileGroup,]) => ((includeFlowerTiles ?? false) ? true : !flowerTileGroups.has(tileGroup)))
         .map(([, map]) => [...map.values()]) // number[][]
         .reduce<number[]>((accum, numberArray) => accum.concat(numberArray), [])
         .reduce<number>((sum, quantity) => sum + quantity, 0);
@@ -80,7 +80,7 @@ export class TileToQuantityMap {
     getQuantityToTileMap(includeFlowerTiles?: boolean) : ReadonlyMap<number, Tile[]> {
         const invertedMap = new Map<number, Tile[]>();
         for (const [tileGroup, innerMap] of this._tileToQuantityMap.entries()) {
-            if (!includeFlowerTiles && flowerTileGroups.has(tileGroup)) {
+            if (!(includeFlowerTiles ?? false) && flowerTileGroups.has(tileGroup)) {
                 continue;
             }
             for (const [tileValue, quantity] of innerMap.entries()) {

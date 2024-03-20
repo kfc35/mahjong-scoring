@@ -6,6 +6,7 @@ import Pair from "model/meld/pair";
 import { SpecialWinningHand } from "model/hand/hk/specialWinningHand";
 import { assertTilesSuitedOrHonor, tilesUnique } from "common/tileUtils";
 import { assertTilesNotNullAndCorrectLength } from "common/tileUtils";
+import { meldExistsInMelds } from "common/meldUtils";
 
 export function constructThirteenTilesWithOneDupAnalyzer(thirteenUniqueTiles: SuitedOrHonorTile[]): HandAnalyzer<SpecialWinningHand> {
     assertTilesSuitedOrHonor(thirteenUniqueTiles);
@@ -37,6 +38,10 @@ export function constructThirteenTilesWithOneDupAnalyzer(thirteenUniqueTiles: Su
         if (pair === undefined || tiles.length !== handMinLength - 1) {
             return [];
         }
-        return [new SpecialWinningHand(tiles, hand.flowerTiles, hand.mostRecentTile, pair)];
+        // if pre-specified melds exist, it can only be the pair we found.
+        if (!hand.preSpecifiedMelds || !(hand.preSpecifiedMelds.length === 1 && meldExistsInMelds(hand.preSpecifiedMelds, pair, false))) {
+            return [];
+        }
+        return [new SpecialWinningHand([...tiles, ...pair.tiles], hand.mostRecentTile, hand.flowerTiles)];
     };
 }

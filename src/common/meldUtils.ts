@@ -35,28 +35,31 @@ export function meldHasTile(meld: Meld, tile: Tile) : boolean {
     return false;
 }
 
-export function meldsAreSubset(melds: Meld[], potentialSubset: Meld[], ignoreExposed? : boolean) {
-    return potentialSubset.every(meld => meldExistsInMelds(melds, meld, ignoreExposed));
+export function meldsAreSubset(melds: Meld[], potentialSubset: Meld[], ignoreExposed? : boolean) : boolean {
+    const haystack = [...melds];
+    for (const needle of potentialSubset) {
+        let found = false;
+        for (let i = 0; i < haystack.length; i++) {
+            if (needle.equals(haystack[i], ignoreExposed)) {
+                haystack.splice(i, 1);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+    }
+    return true;
 }
 
-export function meldExistsInMelds(melds: Meld[], meldToCheck: Meld, ignoreExposed?: boolean) {
+export function meldExistsInMelds(melds: Meld[], meldToCheck: Meld, ignoreExposed?: boolean) : boolean {
     for (const meld of melds) {
         if (meld.equals(meldToCheck, ignoreExposed)) {
             return true;
         }
     }
     return false;
-}
-
-export function overwriteExposedFlag(meldsToOverwrite: Meld[], meldsWithDesiredExposedFlag: Meld[]) {
-    return meldsToOverwrite.map(meldToOverwrite => {
-        for (const meld of meldsWithDesiredExposedFlag) {
-            if (meldToOverwrite.equals(meld, false)) {
-                return meld.clone();
-            }
-        }
-        return meldToOverwrite.clone();
-    });
 }
 
 export function cartesianProduct(meldsOne: Meld[][], meldsTwo: Meld[][]) : Meld[][] {

@@ -19,7 +19,7 @@ export class Hand {
     /* preSpecifiedMelds are melds that must be present in every derived winning hand.
        preSpecifiedMelds = [] means that there are no restrictions on any derived winning hands.
        e.g. if preSpeciedMelds has a concealed pong, every winning hand must have that concealed pong. 
-       Ideally, the tiles in the meld are also duplicated in _tileToQuantity */ 
+       The tiles in each meld are also present in _tileToQuantity */ 
     private _preSpecifiedMelds: Meld[];
     private _flowerTiles: FlowerTile[];
     private _mostRecentTile: SuitedOrHonorTile;
@@ -72,13 +72,13 @@ export class Hand {
             }
         }
         if (tileToQuantity.getQuantity(mostRecentTile) === 0) {
-            throw new TypeError("mostRecentTile must also be included in the tiles array.");
+            throw new TypeError("mostRecentTile must be present in the tiles array.");
         }
 
-        this._preSpecifiedMelds = preSpecifiedMelds ?? [];
         this._tileToQuantity = tileToQuantity;
         this._mostRecentTile = mostRecentTile;
         this._mostRecentTileIsSelfDrawn = mostRecentTileIsSelfDrawn;
+        this._preSpecifiedMelds = preSpecifiedMelds ?? [];
     }
 
     get tileToQuantity() {
@@ -117,15 +117,15 @@ export class Hand {
         return this._flowerTiles;
     }
 
-    get preSpecifiedMelds() {
-        return this._preSpecifiedMelds;
-    }
-
     get mostRecentTile() {
         return this._mostRecentTile;
     }
 
     get mostRecentTileIsSelfDrawn() {
         return this._mostRecentTileIsSelfDrawn;
+    }
+
+    get preSpecifiedMelds() {
+        return this._preSpecifiedMelds;
     }
 }
