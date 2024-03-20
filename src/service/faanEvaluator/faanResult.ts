@@ -1,4 +1,4 @@
-import { Faan } from "model/faan/faan";
+import { Faan } from "model/point/pointCriterion";
 import { Tile } from "model/tile/tile";
 
 export class FaanResult {

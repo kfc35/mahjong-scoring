@@ -18,7 +18,7 @@ export function assertTilesHaveSameSuitedGroup(tiles: Tile[]): tiles is SuitedTi
     if (!firstTile) {
         throw new Error("tiles cannot be empty");
     }
-    if (!tiles.every((tile) => isSuitedTile(tile) && tile.group === firstTile.group)) {
+    if (!tiles.every((tile) => isSuitedTile(tile) && !!tile && tile.group === firstTile.group)) {
         throw new Error("Each tile must be of the same SuitedTile TileGroup"); 
     }
     return true;

@@ -37,6 +37,6 @@ export function constructThirteenTilesWithOneDupAnalyzer(thirteenUniqueTiles: Su
         if (pair === undefined || tiles.length !== handMinLength - 1) {
             return [];
         }
-        return [new SpecialWinningHand(tiles, hand.flowerTiles, pair)];
+        return [new SpecialWinningHand(tiles, hand.flowerTiles, hand.mostRecentTile, pair)];
     };
 }

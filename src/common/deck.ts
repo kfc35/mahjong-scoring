@@ -19,9 +19,9 @@ export const
     AUTUMN_SEASON = new SeasonTile(SeasonTileValue.AUTUMN),
     WINTER_SEASON = new SeasonTile(SeasonTileValue.WINTER),
 
-    FAAT_DRAGON = new DragonTile(DragonTileValue.FAAT),
-    BAAK_DRAGON = new DragonTile(DragonTileValue.BAAK),
-    ZONG_DRAGON = new DragonTile(DragonTileValue.ZONG),
+    GREEN_DRAGON = new DragonTile(DragonTileValue.GREEN),
+    WHITE_DRAGON = new DragonTile(DragonTileValue.WHITE),
+    RED_DRAGON = new DragonTile(DragonTileValue.RED),
 
     EAST_WIND = new WindTile(WindTileValue.EAST),
     SOUTH_WIND = new WindTile(WindTileValue.SOUTH),

@@ -27,7 +27,8 @@ function getSuitedMelds(hand: Hand, tileGroup: SuitedTileGroup) : Meld[][] {
     return getMeldsFromStartingSTV(tileGroup, SuitedTileValue.ONE, memo);
 }
 
-// Returns a list of possible meld combinations (hence Meld[][])
+// Returns a list of possible meld combinations (hence Meld[][]).
+// All melds have exposed = false by default.
 function getMeldsFromStartingSTV(tileGroup: SuitedTileGroup, startingSTV: SuitedTileValue | undefined, quantityMemo: SuitedTileValueQuantityMemo) : Meld[][] {
     if (startingSTV === undefined) {
         return []; // finished processing for this tileGroup

@@ -12,27 +12,36 @@ function constructSevenPairsAnalyzer() : HandAnalyzer<StandardWinningHand> {
     return (hand: Hand) => {
         if (hand.getQuantityPerUniqueTile().every(quantity => quantity % 2 === 0)) {
             const melds : Meld[] = [];
+            let winningPair : Pair | undefined = undefined;
             for (const [quantity, tileArray] of hand.getQuantityToTileMap().entries()) {
                 if (quantity === 2) {
                     for (const tile of tileArray) {
                         if (isSuitedOrHonorTile(tile)) {
-                            melds.push(new Pair(tile));
+                            const pair = new Pair(tile);
+                            melds.push(pair);
+                            if (hand.mostRecentTile.equals(tile)) {
+                                winningPair = pair;
+                            }
                         }
                     }
                 }
                 if (quantity === 4) {
                     for (const tile of tileArray) {
                         if (isSuitedOrHonorTile(tile)) {
-                            melds.push(new Pair(tile));
-                            melds.push(new Pair(tile));
+                            const pair = new Pair(tile);
+                            melds.push(pair);
+                            melds.push(pair.clone());
+                            if (hand.mostRecentTile.equals(tile)) {
+                                winningPair = pair;
+                            }
                         }
                     }
                 }
             }
-            if (meldsNotNullAndCorrectLength(melds, 7)) {
+            if (!meldsNotNullAndCorrectLength(melds, 7) || !winningPair) {
                 return [];
             }
-            return [new StandardWinningHand(melds, hand.flowerTiles)];
+            return [new StandardWinningHand(melds, winningPair, hand.mostRecentTile, hand.flowerTiles)];
         }
         return [];
     }

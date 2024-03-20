@@ -15,7 +15,7 @@ export function isHongKongTile(tile: Tile): tile is HongKongTile {
 // TODO move this
 /* For certain winning hands (e.g. in HK scoring), a dragon is associated with a suit.*/
 export const dragonTileToTileGroup : ReadonlyMap<DragonTileValue, TileGroup> = new Map<DragonTileValue, TileGroup>([
-    [DragonTileValue.FAAT, TileGroup.BAMBOO],
-    [DragonTileValue.ZONG, TileGroup.CHARACTER],
-    [DragonTileValue.BAAK, TileGroup.CIRCLE],
+    [DragonTileValue.GREEN, TileGroup.BAMBOO],
+    [DragonTileValue.RED, TileGroup.CHARACTER],
+    [DragonTileValue.WHITE, TileGroup.CIRCLE],
 ])

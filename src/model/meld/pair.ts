@@ -4,8 +4,15 @@ import { MeldType } from "model/meld/meldType";
 import { assertTileSuitedOrHonor } from "common/tileUtils";
 
 export default class Pair extends Meld {
-    constructor(tile: SuitedOrHonorTile) {
+    private _tile: SuitedOrHonorTile;
+
+    constructor(tile: SuitedOrHonorTile, exposed? : boolean) {
         assertTileSuitedOrHonor(tile);
-        super([tile.copy(), tile.copy()], MeldType.PAIR, false);
+        super([tile.copy(), tile.copy()], MeldType.PAIR, exposed);
+        this._tile = tile;
+    }
+
+    clone(exposedOverride? : boolean) {
+        return new Pair(this._tile, exposedOverride ?? this.exposed);
     }
 }

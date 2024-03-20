@@ -32,9 +32,9 @@ export function isSeasonTileValue(tileValue: TileValue): tileValue is SeasonTile
 }
 
 export enum DragonTileValue {
-    FAAT = 'FAAT',
-    BAAK = 'CIRCLE',
-    ZONG = 'CHARACTER'
+    GREEN = 'GREEN',
+    WHITE = 'WHITE',
+    RED = 'RED'
 }
 
 export const dragonTileValues : DragonTileValue[] = 

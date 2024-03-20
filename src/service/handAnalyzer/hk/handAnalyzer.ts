@@ -1,7 +1,7 @@
 import { Hand } from "model/hand/hk/hand";
 import { WinningHand } from "model/hand/hk/winningHand";
 import { analyzeForSpecialWinningHands } from "service/handAnalyzer/base/specialWinningHandAnalyzer/specialWinningHandAnalyzer";
-import { analyzeForStandardWinningHands } from "service/handAnalyzer/base/standardWinningHandAnalyzer/standardWinningHandAnalyzer";
+import { analyzeForStandardWinningHands } from "service/handAnalyzer/hk/standardWinningHandAnalyzer/standardWinningHandAnalyzer";
 
 export type HandAnalyzer<T extends WinningHand> = (hand: Hand) => T[]
 

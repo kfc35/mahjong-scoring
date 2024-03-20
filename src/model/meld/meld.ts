@@ -5,7 +5,10 @@ import { assertTilesSuitedOrHonor } from "common/tileUtils";
 export default abstract class Meld {
     protected _tiles: SuitedOrHonorTile[];
     protected _type: MeldType;
-    private _exposed: boolean;
+    /* _exposed = true if a discard was used to complete it during regular play.
+      If the last tile that completes your hand AND this meld is from a discard, 
+      _exposed is set to true. */
+    protected _exposed: boolean;
 
     constructor(tiles: SuitedOrHonorTile[], type: MeldType, exposed?: boolean) {
         assertTilesSuitedOrHonor(tiles);
@@ -28,7 +31,7 @@ export default abstract class Meld {
         return this._exposed;
     }
 
-    equals(meld: Meld | undefined): boolean {
+    equals(meld: Meld | undefined, ignoreExposed? : boolean): boolean {
         if (!meld) {
             return false;
         }
@@ -39,6 +42,8 @@ export default abstract class Meld {
         if (!this._tiles.every((tile, index) => tile.equals(meld.tiles[index]))) {
             return false;
         }
-        return this._type === meld.type && this._exposed === meld.exposed;
+        return this._type === meld.type && ((ignoreExposed ?? true) || this._exposed === meld.exposed);
     }
+
+    abstract clone(exposedOverride? : boolean): Meld;
 }

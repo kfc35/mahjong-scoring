@@ -4,8 +4,15 @@ import { MeldType } from "model/meld/meldType";
 import { assertTileSuitedOrHonor } from "common/tileUtils";
 
 export default class Kong extends Meld {
+    private _tile: SuitedOrHonorTile;
+
     constructor(tile: SuitedOrHonorTile, exposed?: boolean) {
         assertTileSuitedOrHonor(tile);
         super([tile.copy(), tile.copy(), tile.copy(), tile.copy()], MeldType.KONG, exposed);
+        this._tile = tile.copy();
+    }
+
+    clone(exposedOverride? : boolean) {
+        return new Kong(this._tile, exposedOverride ?? this.exposed);
     }
 }

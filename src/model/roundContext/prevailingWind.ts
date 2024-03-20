@@ -7,7 +7,7 @@ export enum PrevailingWind {
     NORTH = 'NORTH'
 }
 
-export function getCorrespondingWindTileValue(prevailingWind: PrevailingWind) : WindTileValue {
+export function prevailingWindToWindTileValue(prevailingWind: PrevailingWind) : WindTileValue {
     switch (prevailingWind) {
         case PrevailingWind.EAST:
             return WindTileValue.EAST;
