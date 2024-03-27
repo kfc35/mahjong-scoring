@@ -5,7 +5,7 @@ import { StandardWinningHand } from "model/hand/hk/standardWinningHand"
 import { analyzeForHonorMelds } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/honorMeldsAnalyzer/honorMeldsAnalyzer";
 import { analyzeForNonKnittedSuitedMelds } from "service/handAnalyzer/base/standardWinningHandAnalyzer/meldsAnalyzer/suitedMeldsAnalyzer/nonKnittedSuitedMeldsAnalyzer";
 import { cartesianProduct, meldsHasOnePair, meldsNumKongs, meldsNumTiles, meldsAreSubset, toTiles, meldHasTile, meldExistsInMelds } from "common/meldUtils";
-import { TileToQuantityMap } from "model/hand/hk/tileQuantityMap";
+import { TileToQuantityMap } from "model/tile/quantityMap/tileQuantityMap";
 import { handMinLength } from "model/hand/hk/handConstants";
 
 export const analyzeForFiveMeldsNoKnitted : HandAnalyzer<StandardWinningHand> = (hand: Hand) => {

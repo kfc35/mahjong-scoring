@@ -2,13 +2,16 @@ import { PointCriterion } from "model/point/pointCriterion";
 
 const winningHandFaan = [
     PointCriterion.CHICKEN,
-    PointCriterion.COMMON_WITHOUT_VALUELESS_PAIR, 
-    PointCriterion.COMMON_WITH_VALUELESS_PAIR, 
+    PointCriterion.ALL_CHOWS, 
+    PointCriterion.VALUELESS_PAIR, 
     PointCriterion.ALL_IN_TRIPLETS, 
     PointCriterion.SEVEN_PAIRS,
     PointCriterion.MIXED_ONE_SUIT,
     PointCriterion.ALL_ONE_SUIT,
     PointCriterion.ALL_HONORS,
+    PointCriterion.ALL_TERMINALS,
+    // ALL_TERMINALS_AND_HONORS is not counted in HKOS official, but can be enabled if desired.
+    PointCriterion.ALL_TERMINALS_AND_HONORS
     PointCriterion.SMALL_DRAGONS,
     PointCriterion.GREAT_DRAGONS,
     PointCriterion.SMALL_WINDS,
@@ -16,9 +19,10 @@ const winningHandFaan = [
     PointCriterion.THIRTEEN_ORPHANS,
     PointCriterion.ALL_KONGS,
     PointCriterion.SELF_TRIPLETS,
-    PointCriterion.ORPHANS,
     PointCriterion.NINE_GATES,
     PointCriterion.CONCEALED_HAND,
+    PointCriterion.MELDED_HAND,
+    PointCriterion.FULLY_CONCEALED_HAND,
 ] as const;
 
 export type WinningHandFaan = typeof winningHandFaan[number];

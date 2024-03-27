@@ -1,11 +1,10 @@
-import { assertTilesHongKongTile, assertTilesNotNullAndCorrectLength, tilesUnique } from "common/tileUtils";
+import { assertTilesHongKongTile, assertTilesNotNullAndCorrectLength, tilesUnique, assertEachTileHasQuantityLessThanMaxPerTile } from "common/tileUtils";
 import { Tile } from "model/tile/tile";
 import { type HongKongTile } from "model/tile/hk/hongKongTile";
 import { type FlowerTile, isFlowerTile } from "model/tile/group/flowerTile";
 import { type SuitedOrHonorTile, isSuitedOrHonorTile } from "model/tile/group/suitedOrHonorTile";
-import { TileToQuantityMap } from "model/hand/hk/tileQuantityMap";
-import { handMinLength, handMaxLength, handMaxNumUniqueFlowers } from "model/hand/hk/handConstants";
-import { maxQuantityPerNonFlowerTile } from "common/deck";
+import { TileToQuantityMap } from "model/tile/quantityMap/tileQuantityMap";
+import { handMinLengthWithoutFlowers, handMaxLength, handMaxNumUniqueFlowers, handMaxLengthWithoutFlowers } from "model/hand/hk/handConstants";
 import { TileGroup } from "model/tile/tileGroup";
 import { type TileValue } from "model/tile/tileValue";
 import Meld from "model/meld/meld";
@@ -19,15 +18,16 @@ export class Hand {
     /* preSpecifiedMelds are melds that must be present in every derived winning hand.
        preSpecifiedMelds = [] means that there are no restrictions on any derived winning hands.
        e.g. if preSpeciedMelds has a concealed pong, every winning hand must have that concealed pong. 
-       The tiles in each meld are also present in _tileToQuantity */ 
+       The tiles in each meld must also be present in _tileToQuantity */ 
     private _preSpecifiedMelds: Meld[];
-    private _flowerTiles: FlowerTile[];
     private _mostRecentTile: SuitedOrHonorTile;
+    // if false, then it means the player took a discard
     private _mostRecentTileIsSelfDrawn: boolean;
+    private _flowerTiles: FlowerTile[];
 
     constructor(tiles: HongKongTile[], mostRecentTile: SuitedOrHonorTile, 
         mostRecentTileIsSelfDrawn: boolean, preSpecifiedMelds?: Meld[]) {
-        assertTilesNotNullAndCorrectLength(tiles, handMinLength, handMaxLength);
+        assertTilesNotNullAndCorrectLength(tiles, handMinLengthWithoutFlowers, handMaxLength);
         assertTilesHongKongTile(tiles)
 
         this._flowerTiles = []; 
@@ -49,16 +49,15 @@ export class Hand {
                 suitedOrHonorTiles.push(tile);
             }
         }
-        if (suitedOrHonorTiles.length < handMinLength) {
-            throw new TypeError("A HK Hand must have at least " + handMinLength + " suited or honor tiles. Found " + suitedOrHonorTiles.length);
+        if (suitedOrHonorTiles.length < handMinLengthWithoutFlowers) {
+            throw new TypeError("A HK Hand must have at least " + handMinLengthWithoutFlowers + " suited or honor tiles. Found " + suitedOrHonorTiles.length);
         }
+        if (suitedOrHonorTiles.length > handMaxLengthWithoutFlowers) {
+            throw new TypeError("A HK Hand must have less than " + handMaxLengthWithoutFlowers + " suited or honor tiles. Found " + suitedOrHonorTiles.length);
+        }
+        assertEachTileHasQuantityLessThanMaxPerTile(suitedOrHonorTiles);
 
         const tileToQuantity : TileToQuantityMap = new TileToQuantityMap(tiles);
-        const quantityPerUniqueTile : number[] = tileToQuantity.getQuantityPerUniqueTile();
-        const everyTileQuantityLessThanMaxUniqueTilePerHand = quantityPerUniqueTile.every(quantity => quantity < maxQuantityPerNonFlowerTile);
-        if (!everyTileQuantityLessThanMaxUniqueTilePerHand) {
-            throw new TypeError("A Hand can only have max " + maxQuantityPerNonFlowerTile + " of each unique suited or honor tile.");
-        }
 
         if (preSpecifiedMelds && preSpecifiedMelds.length > 0) {
             const meldTiles = toTiles(preSpecifiedMelds);

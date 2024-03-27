@@ -16,3 +16,7 @@ export default class Kong extends Meld {
         return new Kong(this._tile, exposedOverride ?? this.exposed);
     }
 }
+
+export function meldIsKong(meld: Meld): meld is Kong {
+    return meld.type == MeldType.KONG;
+}

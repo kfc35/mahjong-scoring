@@ -1,13 +1,15 @@
 export enum PointCriterion {
     // Hand Points
     CHICKEN = 'CHICKEN',
-    COMMON_WITHOUT_VALUELESS_PAIR = 'COMMON_WITHOUT_VALUELESS_PAIR',
-    COMMON_WITH_VALUELESS_PAIR = 'COMMON_WITH_VALUELESS_PAIR',
+    ALL_CHOWS = 'ALL_CHOWS', // aka Common Hand
+    VALUELESS_PAIR = 'VALUELESS_PAIR',
     ALL_IN_TRIPLETS = 'ALL_IN_TRIPLETS', // aka all pongs/kongs
     SEVEN_PAIRS = 'SEVEN_PAIRS',
     MIXED_ONE_SUIT = 'MIXED_ONE_SUIT', // honors + one suit
     ALL_ONE_SUIT = 'ALL_ONE_SUIT', // only one suit
     ALL_HONORS = 'ALL_HONORS', // only honors, ALL_IN_TRIPLETS not awarded
+    ALL_TERMINALS = 'ALL_TERMINALS', // AKA Orphans, ALL_IN_TRIPLES not awarded
+    ALL_TERMINALS_AND_HONORS = 'ALL_TERMINALS_AND_HONORS', // AKA Mixed Orphans.
     SMALL_DRAGONS = 'SMALL_DRAGONS', // 2 pong dragons, pair of third
     GREAT_DRAGONS = 'GREAT_DRAGONS', // 3 pong dragons
     SMALL_WINDS = 'SMALL_WINDS', // 3 pong winds, pair of fourth. sometimes has restrictions on fourth pair
@@ -16,11 +18,17 @@ export enum PointCriterion {
     ALL_KONGS = 'ALL_KONGS', // ALL_IN_TRIPLETS not awarded
     SELF_TRIPLETS = 'SELF_TRIPLETS', // four concealed pongs/kongs, not even the last one.
     // can win from self-pick for pair only? no bonus for winning from wall
-    ORPHANS = 'ORPHANS', // ALL_IN_TRIPLETS not counted.
     NINE_GATES = 'NINE_GATES', // must win totally concealed, can only eat when waiting.    
-    MIXED_ORPHANS = 'MIXED_ORPHANS', // TODO is this an actual hand?
-    CONCEALED_HAND = 'CONCEALED_HAND', // at least four of the five melds are concealed, may or may not include SELF_DRAW last tile
-    FULLY_CONCEALED_HAND = 'FULLY_CONCEALED_HAND', // all five melds are concealed, only SELF_DRAWN. takes precedence over CONCEALED_HAND.
+    CONCEALED_HAND = 'CONCEALED_HAND', // the four non pair melds are concealed (except maybe the last one if won by discard), may or may not include SELF_DRAW last tile. can be customized.
+    // the concealed hand may still count if the last self-drawn tile completes one of the four non pair melds depending on desired behavior (aka winning by discard on non pair meld is accepted)
+    // default behavior: concealed hand counts if all four non pair melds are concealed and the last tile completes only the last non-pair meld, no restritions on self-draw.
+    MELDED_HAND = 'MELDED_HAND', // the four non pair melds are revealed, may or may not include SELF_DRAW last tile for the pair. can be customized.
+    // the melded hand may still count if the last tile completes the last non-pair meld via discard.
+    // default behavior: melded hand counts if all four non pair melds are revealed and the last tile completes the pair via discard.
+    // a FULLY_CONCEALED_HAND = CONCEALED_HAND + SELF_DRAWN. the self drawn tile applies to any of the melds
+    // a FULLY_MELDED_HAND = MELDED_HAND and no SELF_DRAWN present. the last tile must complete the pair.
+    MOON_FROM_THE_BOTTOM_OF_THE_SEA = 'MOON_FROM_THE_BOTTOM_OF_THE_SEA',
+    PLUM_BLOSSOM_ON_THE_ROOF = 'PLUM_BLOSSOM_ON_THE_ROOF',
 
     // Individual Meld Points
     SEAT_WIND_PONG = 'SEAT_WIND_PONG',

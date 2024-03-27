@@ -29,3 +29,7 @@ export default class Chow extends Meld {
         return new Chow(this._tiles, exposedOverride ?? this.exposed);
     }
 }
+
+export function meldIsChow(meld: Meld): meld is Chow {
+    return meld.type == MeldType.CHOW;
+}

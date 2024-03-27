@@ -16,3 +16,7 @@ export default class Pong extends Meld {
         return new Pong(this._tile, exposedOverride ?? this.exposed);
     }
 }
+
+export function meldIsPong(meld: Meld): meld is Pong {
+    return meld.type == MeldType.PONG;
+}

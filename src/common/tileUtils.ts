@@ -3,6 +3,8 @@ import { type SuitedOrHonorTile, isSuitedOrHonorTile } from "model/tile/group/su
 import SuitedTile, { isSuitedTile } from "model/tile/group/suitedTile";
 import { type HongKongTile, isHongKongTile } from "model/tile/hk/hongKongTile";
 import { Tile } from "model/tile/tile.js";
+import { TileToQuantityMap } from "model/tile/quantityMap/tileQuantityMap";
+import { maxQuantityPerNonFlowerTile } from "common/deck";
 
 export function assertTilesNotNullAndCorrectLength(tiles: Tile[], minLength: number, maxLength: number) {
     if (!tiles || !tiles.every(tile => !!tile)) {
@@ -76,4 +78,12 @@ export function tilesUnique(tiles: Tile[]): boolean {
     }
     return sortedTiles.every((tile, index) => 
         index + 1 < sortedTiles.length ? !tile.equals(sortedTiles[index + 1]) : true);
+}
+
+export function assertEachTileHasQuantityLessThanMaxPerTile(tiles: SuitedOrHonorTile[]): boolean {
+    const tileToQuantity : TileToQuantityMap = new TileToQuantityMap(tiles);
+    const quantityPerUniqueTile : number[] = tileToQuantity.getQuantityPerUniqueTile();
+    if (!quantityPerUniqueTile.every(quantity => quantity < maxQuantityPerNonFlowerTile)) {
+        throw new Error(`Each suited or honor tile must have quantity < ${maxQuantityPerNonFlowerTile}.`);
+    }
 }

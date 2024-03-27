@@ -16,3 +16,7 @@ export default class Pair extends Meld {
         return new Pair(this._tile, exposedOverride ?? this.exposed);
     }
 }
+
+export function meldIsPair(meld: Meld): meld is Pair {
+    return meld.type == MeldType.PAIR;
+}

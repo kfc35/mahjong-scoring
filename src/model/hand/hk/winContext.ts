@@ -1,5 +1,5 @@
-export enum WinCondition {
-    SELF_DRAW = 'SELF_DRAW', // last winning tile is NOT a discard
+export enum WinContext {
+    SELF_DRAW = 'SELF_DRAW', // last tile is NOT a discard
     // "Win By Wall" aka "Concealed Hand" is calculated by looking at the melds.
     ROBBING_KONG = 'ROBBING_KONG',  // a special type of discard win - eating someones discard that would have been someone else's kong
     WIN_BY_LAST_TILE = 'WIN_BY_LAST_TILE', // win by last tile on wall
